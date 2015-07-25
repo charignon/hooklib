@@ -1,4 +1,5 @@
-# hooklib
+# hooklib: write source control hooks in Python
+
 Python hook helper library for git, hg, subversion ...
 Write your hooks once and for all, run them in parallel, make your life and migrations easier!
 
@@ -13,7 +14,26 @@ Before sending a Pull request please run the tests:
 - To run the integration tests, download run-tests.py from the mercurial repo "https://selenic.com/hg/file/tip/tests/run-tests.py"
 Then you can run the tests with `python run-tests.py test-git.t -l` (I only have tests for git so far)
 
-Example 1: only authorize push to master
+Example 1: gate commit on commit message format
+-
+
+Save the following file under .git/hooks/update and make it executable to test it: 
+```python
+#!/usr/bin/python
+from hooklib import basehook, runhooks
+ERROR_MSG = "you can only push commit with 'secretmessage' in the description"
+class mastergatinghook(basehook):
+   def check(self, log, revdata):
+       for rev in revdata.revs:
+           if not 'secretmessage' in revdata.commitmessagefor(rev):
+               log.write(ERROR_MSG)
+               return False
+       return True
+
+runhooks('update', hooks=[mastergatinghook])
+```
+
+Example 2: only authorize push to master
 -
 
 Save the following file under .git/hooks/update and make it executable to test it: 
@@ -33,7 +53,7 @@ Save the following file under .git/hooks/update and make it executable to test i
  runhooks('update', hooks=[mastergatinghook])
   ```
   
-Example 2: parallel execution
+Example 3: parallel execution
 -
 Save the following file under .git/hooks/post-update and make it executable to test it: 
   ```python
