@@ -11,7 +11,7 @@ Contributing
 To run the unit tests, simply call `python hooktests.py`
 
 To run the integration tests, download run-tests.py from the mercurial repo "https://selenic.com/hg/file/tip/tests/run-tests.py"
-Then you can run the tests with `python run-tests.py test-integration.t -l`
+Then you can run the tests with `python run-tests.py test-git.t -l` (I only have tests for git so far)
 
 Minimal example 1: only authorize push to master
 -
