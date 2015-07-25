@@ -13,7 +13,7 @@ To run the unit tests, simply call `python hooktests.py`
 To run the integration tests, download run-tests.py from the mercurial repo "https://selenic.com/hg/file/tip/tests/run-tests.py"
 Then you can run the tests with `python run-tests.py test-git.t -l` (I only have tests for git so far)
 
-Minimal example 1: only authorize push to master
+Example 1: only authorize push to master
 -
 
 Save the following file under .git/hooks/update and make it executable to test it: 
@@ -33,7 +33,7 @@ Save the following file under .git/hooks/update and make it executable to test i
  runhooks('update', hooks=[mastergatinghook])
   ```
   
-Minimal example 2: running 50 post-update hooks in parallel
+Example 2: parallel execution
 -
 Save the following file under .git/hooks/post-update and make it executable to test it: 
   ```python
