@@ -37,6 +37,7 @@ Example 2: parallel execution
 -
 Save the following file under .git/hooks/post-update and make it executable to test it: 
   ```python
+  #!/usr/bin/python
   from hooklib import basehook, runhooks
   import time
   
