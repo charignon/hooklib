@@ -7,16 +7,16 @@ Write a basic git update hook that authorizes only pushing to master
 
   $ cat <<EOF >> hooks/update
   > #!/usr/bin/python
-  > from hooklib import basehook, hookrunner
+  > from hooklib import basehook, runhooks
   > ERROR_MSG = "you can only push master on this repo"
-  > class failinghook(basehook):
+  > class mastergatinghook(basehook):
   >     def check(self, log, revdata):
   >         check = revdata['name'] == 'refs/heads/master'
   >         if not check:
   >             log.write(ERROR_MSG)
   >         return check
   > 
-  > hookrunner.run('update', failinghook)
+  > runhooks('update', hooks=[mastergatinghook])
   > EOF
 
   $ chmod +x hooks/update
@@ -45,13 +45,13 @@ Write a basic git update hook that authorizes only pushing to master
 Add a post-update hook that prints the refs that are pushed
   $ cat <<EOF >> ../server/hooks/post-update
   > #!/usr/bin/python
-  > from hooklib import basehook, hookrunner
-  > class failinghook(basehook):
+  > from hooklib import basehook, runhooks
+  > class printinghook(basehook):
   >     def check(self, log, revdata):
   >         log.write("New ref: "+'\,'.join(revdata['revs']))
   >         return True
   > 
-  > hookrunner.run('post-update', failinghook)
+  > runhooks('post-update', hooks=[printinghook])
   > EOF
   $ chmod +x ../server/hooks/post-update
   $ echo "x" > a
@@ -64,3 +64,26 @@ Add a post-update hook that prints the refs that are pushed
   To file:///$TESTTMP/server
      *..*  master -> master (glob)
 
+Parallel hook execution
+  $ cat <<EOF >> ../server/hooks/post-update
+  > #!/usr/bin/python
+  > from hooklib import basehook, runhooks
+  > import time
+  > class slowhook(basehook):
+  >     def check(self, log, revdata):
+  >         time.sleep(0.1)
+  >         return True
+  > 
+  > runhooks('post-update', hooks=[slowhook]*200, parallel=True)
+  > EOF
+  $ chmod +x ../server/hooks/post-update
+  $ echo "y" > a
+  $ git add a
+  $ git commit -am "Adding y"
+  [master *] Adding y (glob)
+   1 file changed, 1 insertion(+), 1 deletion(-)
+  $ git push origin master
+  remote: New ref: refs/heads/master        
+  To file:///$TESTTMP/server
+     *..*  master -> master (glob)
+ 

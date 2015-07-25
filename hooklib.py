@@ -88,17 +88,20 @@ class hookrunner(object):
         
         return success
 
-    @staticmethod
-    def run(phase, *hooks):
+
+def runhooks(phase, hooks, parallel = False):
+    if parallel:
+        runner = parallelhookrunner(phase)
+    else:
         runner = hookrunner(phase)
-        for h in hooks:
-            runner.register(h)
-        ret = runner.evaluate()
-        log = runner.log.read()
-        if log:
-            sys.stderr.write("\n".join(log)+"\n")
-        if not ret:
-            sys.exit(1)
+    for h in hooks:
+        runner.register(h)
+    ret = runner.evaluate()
+    log = runner.log.read()
+    if log:
+        sys.stderr.write("\n".join(log)+"\n")
+    if not ret:
+        sys.exit(1)
 
 
 class parallelhookrunner(hookrunner):
@@ -126,6 +129,7 @@ class parallelhookrunner(hookrunner):
         self.log = hooklog.aggregate(logs)
         return all(res)
 
+ 
 class basehook(object):
     """A basehook is called for each rev that goes through, once with the revdata"""
     pass
