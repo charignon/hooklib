@@ -10,8 +10,10 @@ Currently only supports git.
 
 Example 1: gate commit on commit message format
 -
-Feel free to compare this to https://git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy
+Feel free to compare this to how you would do this without this library: https://git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy
+
 Save the following file under .git/hooks/update and make it executable to test it: 
+
 ```python
 #!/usr/bin/python
 from hooklib import basehook, runhooks
