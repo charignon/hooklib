@@ -11,7 +11,7 @@ Write a basic git update hook that authorizes only pushing to master
   > ERROR_MSG = "you can only push master on this repo"
   > class mastergatinghook(basehook):
   >     def check(self, log, revdata):
-  >         check = revdata['name'] == 'refs/heads/master'
+  >         check = revdata.refname == 'refs/heads/master'
   >         if not check:
   >             log.write(ERROR_MSG)
   >         return check
@@ -48,7 +48,7 @@ Add a post-update hook that prints the refs that are pushed
   > from hooklib import basehook, runhooks
   > class printinghook(basehook):
   >     def check(self, log, revdata):
-  >         log.write("New ref: "+'\,'.join(revdata['revs']))
+  >         log.write("New ref: "+'\,'.join(revdata.revs))
   >         return True
   > 
   > runhooks('post-update', hooks=[printinghook])
@@ -87,3 +87,37 @@ Parallel hook execution
   To file:///$TESTTMP/server
      *..*  master -> master (glob)
  
+A hook to check that each commit message contains a message
+
+  $ cat <<EOF >> ../server/hooks/update
+  > #!/usr/bin/python
+  > from hooklib import basehook, runhooks
+  > ERROR_MSG = "you can only push commit with 'secretmessage' in the description"
+  > class mastergatinghook(basehook):
+  >     def check(self, log, revdata):
+  >         for rev in revdata.revs:
+  >             if not 'secretmessage' in revdata.commitmessagefor(rev):
+  >                 log.write(ERROR_MSG)
+  >                 return False
+  >         return True
+  > 
+  > runhooks('update', hooks=[mastergatinghook])
+  > EOF
+  $ echo "z" > a
+  $ git add a
+  $ git commit -am "Hello world"
+  [master *] Hello world (glob)
+   1 file changed, 1 insertion(+), 1 deletion(-)
+  $ git push origin master
+  remote: you can only push commit with 'secretmessage' in the description        
+  remote: error: hook declined to update refs/heads/master        
+  To file:///$TESTTMP/server
+   ! [remote rejected] master -> master (hook declined)
+  error: failed to push some refs to 'file:///$TESTTMP/server'
+  [1]
+  $ git commit --amend -m "Hello secretmessage world" &>/dev/null
+  $ git push origin master
+  remote: New ref: refs/heads/master        
+  To file:///$TESTTMP/server
+     *..*  master -> master (glob)
+

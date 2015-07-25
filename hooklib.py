@@ -7,6 +7,7 @@ See https://github.com/charignon/hooklib for examples"""
 import threading
 import sys
 from Queue import Queue
+from hooklib_input import inputparser 
 
 def runhooks(phase, hooks, parallel = False):
     if parallel:
@@ -41,51 +42,6 @@ class hooklog(object):
         ret = hooklog()
         ret.msgs = msgs
         return ret
-
-class gitpostupdateinputparser(object):
-    def parse(self):
-        revs = sys.argv[1:]
-        return {'revs': revs}
-
-class gitupdateinputparser(object):
-    def parse(self):
-        name, old, new = sys.argv[1:]
-        return {'name': name,
-                'old': old,
-                'new': new}
-
-class postupdateinputparser(object):
-    @staticmethod
-    def findscm():
-        """Find the correct type of postupdateinputparser based on the SCM used"""
-        return gitpostupdateinputparser()
-
-class updateinputparser(object):
-    @staticmethod
-    def findscm():
-        """Find the correct type of updateinputparser based on the SCM used"""
-        return gitupdateinputparser()
-
-
-class dummyinputparser(object):
-    def parse(self):
-        return None
-
-class inputparser(object):
-    @staticmethod
-    def fromphase(phase):
-        """Factory method to return an appropriate input parser
-        For example if the phase is 'post-update' and that the git env
-        variables are set, we infer that we need a git postupdate inputparser"""
-        if phase == None:
-            return dummyinputparser()
-        elif phase == 'post-update':
-            return postupdateinputparser.findscm()
-        elif phase == 'update':
-            return updateinputparser.findscm()
-        else:
-            raise Exception("Unsupported hook type %s"%(phase))
-
 
 class hookrunner(object):
     def __init__(self, phase=None):
