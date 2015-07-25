@@ -2,7 +2,22 @@ import threading
 import sys
 from Queue import Queue
 
+def runhooks(phase, hooks, parallel = False):
+    if parallel:
+        runner = parallelhookrunner(phase)
+    else:
+        runner = hookrunner(phase)
+    for h in hooks:
+        runner.register(h)
+    ret = runner.evaluate()
+    log = runner.log.read()
+    if log:
+        sys.stderr.write("\n".join(log)+"\n")
+    if not ret:
+        sys.exit(1)
+
 class hooklog(object):
+    """Collect logs from running hooks"""
     def __init__(self):
         self.msgs = []
 
@@ -87,22 +102,6 @@ class hookrunner(object):
                 success = False
         
         return success
-
-
-def runhooks(phase, hooks, parallel = False):
-    if parallel:
-        runner = parallelhookrunner(phase)
-    else:
-        runner = hookrunner(phase)
-    for h in hooks:
-        runner.register(h)
-    ret = runner.evaluate()
-    log = runner.log.read()
-    if log:
-        sys.stderr.write("\n".join(log)+"\n")
-    if not ret:
-        sys.exit(1)
-
 
 class parallelhookrunner(hookrunner):
     def evaluateone(self, hook):
