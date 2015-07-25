@@ -1,5 +1,6 @@
 # hooklib
-Python hook helper library for git, hg, subversion ... Abstract your hooks, run them in parallel, make your life easier!
+Python hook helper library for git, hg, subversion ... 
+Abstract your hooks, run them in parallel, make your life and migrations easier!
 
 Currently only supports GIT.
 
