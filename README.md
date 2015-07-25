@@ -6,7 +6,7 @@ Currently only supports GIT.
 
 Contributing
 -
-Before sending a Pull request please run the tests.
+Before sending a Pull request please run the tests:
 
 - To run the unit tests, simply call `python hooktests.py`
 - To run the integration tests, download run-tests.py from the mercurial repo "https://selenic.com/hg/file/tip/tests/run-tests.py"
