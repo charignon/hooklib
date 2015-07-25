@@ -10,17 +10,17 @@ Currently only supports git.
 
 Example 1: gate commit on commit message format
 -
-
+Feel free to compare this to https://git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy
 Save the following file under .git/hooks/update and make it executable to test it: 
 ```python
 #!/usr/bin/python
 from hooklib import basehook, runhooks
-ERROR_MSG = "you can only push commit with 'secretmessage' in the description"
+
 class commmitmsggatinghook(basehook):
    def check(self, log, revdata):
        for rev in revdata.revs:
            if not 'secretmessage' in revdata.commitmessagefor(rev):
-               log.write(ERROR_MSG)
+               log.write("you can only push commit with 'secretmessage' in the description")
                return False
        return True
 
