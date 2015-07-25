@@ -1,16 +1,15 @@
 # hooklib
 Python hook helper library for git, hg, subversion ... Abstract your hooks, run them in parallel, make your life easier!
 
-You can see the tests for example use.
 Currently only supports GIT.
 
 
 Contributing
 -
+Before sending a Pull request please run the tests.
 
-To run the unit tests, simply call `python hooktests.py`
-
-To run the integration tests, download run-tests.py from the mercurial repo "https://selenic.com/hg/file/tip/tests/run-tests.py"
+- To run the unit tests, simply call `python hooktests.py`
+- To run the integration tests, download run-tests.py from the mercurial repo "https://selenic.com/hg/file/tip/tests/run-tests.py"
 Then you can run the tests with `python run-tests.py test-git.t -l` (I only have tests for git so far)
 
 Example 1: only authorize push to master
