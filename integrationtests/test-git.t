@@ -93,7 +93,7 @@ A hook to check that each commit message contains a message
   > #!/usr/bin/python
   > from hooklib import basehook, runhooks
   > ERROR_MSG = "you can only push commit with 'secretmessage' in the description"
-  > class mastergatinghook(basehook):
+  > class messagegatinghook(basehook):
   >     def check(self, log, revdata):
   >         for rev in revdata.revs:
   >             if not 'secretmessage' in revdata.commitmessagefor(rev):
@@ -101,7 +101,7 @@ A hook to check that each commit message contains a message
   >                 return False
   >         return True
   > 
-  > runhooks('update', hooks=[mastergatinghook])
+  > runhooks('update', hooks=[messagegatinghook])
   > EOF
   $ echo "z" > a
   $ git add a
