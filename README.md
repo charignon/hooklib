@@ -45,5 +45,11 @@ Save the following file under .git/hooks/post-update and make it executable to t
          time.sleep(0.1)
          return True
   
-  runhooks('post-update', hooks=[slowhook]*200, parallel=True)
+  class veryslowhook(basehook):
+     def check(self, log, revdata):
+         time.sleep(0.5)
+         return True
+
+  # should take roughly as long as the slowest, i.e. 0.5s
+  runhooks('post-update', hooks=[slowhook]*200+[veryslowhook], parallel=True)
   ```

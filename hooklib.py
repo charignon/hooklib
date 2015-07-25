@@ -1,3 +1,9 @@
+"""Hook helpers library 
+
+You can use this library to make it easier to write hooks that work with multiple
+source control system (git, svn, hg ...).
+It currently only works for git.
+See https://github.com/charignon/hooklib for examples"""
 import threading
 import sys
 from Queue import Queue
