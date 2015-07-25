@@ -22,7 +22,7 @@ class commmitmsggatinghook(basehook):
    def check(self, log, revdata):
        for rev in revdata.revs:
            if not 'secretmessage' in revdata.commitmessagefor(rev):
-               log.write("you can only push commit with 'secretmessage' in the description")
+               log.write("commit message must contain 'secretmessage'")
                return False
        return True
 
