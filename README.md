@@ -74,6 +74,14 @@ Save the following file under .git/hooks/post-update and make it executable to t
   runhooks('post-update', hooks=[slowhook]*200+[veryslowhook], parallel=True)
   ```
 
+Installation
+-
+```
+git clone https://github.com/charignon/hooklib.git
+sudo python setup.py install
+sudo pip install mercurial
+```
+
 Contributing
 -
 Before sending a Pull-Request please run the tests:
