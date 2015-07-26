@@ -1,5 +1,6 @@
-from util import popen4
+from mercurial import util
 import sys
+popen4 = util.popen4
 
 class gitinforesolver(object):
     def __init__(self):
