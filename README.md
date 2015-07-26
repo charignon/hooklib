@@ -34,6 +34,7 @@ runhooks('update', hooks=[commmitmsggatinghook])
 Example 2: only authorize push to master
 -
 
+_Contrary to the example 1, here we reference 'refs/heads/master', a git concept => this hook wouldn't work without code change for hg._
 Save the following file under .git/hooks/update and make it executable to test it: 
  ```python
  #!/usr/bin/python
