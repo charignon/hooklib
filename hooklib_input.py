@@ -1,18 +1,37 @@
 from hooklib_git import gitpostupdateinputparser
 from hooklib_git import gitupdateinputparser
-from hooklib_git import gitinforesolver
+from hooklib_git import gitprecommitinputparser
+from hooklib_hg import hgupdateinputparser
+import os
 
 class postupdateinputparser(object):
     @staticmethod
     def findscm():
         """Find the correct type of postupdateinputparser based on the SCM used"""
-        return gitpostupdateinputparser()
+        if 'GIT_DIR' in os.environ:
+            return gitpostupdateinputparser()
+        else:
+            raise Exception("No implemented for your SCM")
+
 
 class updateinputparser(object):
     @staticmethod
     def findscm():
         """Find the correct type of updateinputparser based on the SCM used"""
-        return gitupdateinputparser()
+        if 'GIT_DIR' in os.environ:
+            return gitupdateinputparser()
+        elif 'HG_NODE' in os.environ:
+            return hgupdateinputparser()
+        else:
+            raise Exception("No implemented for your SCM")
+
+class precommitinputparser(object):
+    @staticmethod
+    def findscm():
+        if 'GIT_DIR' in os.environ:
+            return gitprecommitinputparser()
+        else:
+            raise Exception("No implemented for your SCM")
 
 
 class dummyinputparser(object):
@@ -31,6 +50,8 @@ class inputparser(object):
             return postupdateinputparser.findscm()
         elif phase == 'update':
             return updateinputparser.findscm()
+        elif phase == 'pre-commit':
+            return precommitinputparser.findscm()
         else:
             raise Exception("Unsupported hook type %s"%(phase))
 

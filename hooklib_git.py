@@ -1,19 +1,22 @@
 from mercurial import util
 import sys
-popen4 = util.popen4
+import os
 
 class gitinforesolver(object):
     def __init__(self):
+        self.reporoot = None
+        if 'GIT_DIR' in os.environ:
+            self.reporoot = os.path.dirname(os.path.abspath(os.environ["GIT_DIR"]))
         self._revs = None
 
     def commitmessagefor(self, rev):
-        return popen4("git cat-file commit %s | sed '1,/^$/d'" % rev)[1].read().strip()
+        return util.popen4("git cat-file commit %s | sed '1,/^$/d'" % rev)[1].read().strip()
 
     @property
     def revs(self):
         if self._revs:
             return self._revs
-        raw = popen4('git rev-list %s..%s' %(self.old, self.new))[1].read().strip()
+        raw = util.popen4('git rev-list %s..%s' %(self.old, self.new))[1].read().strip()
         if raw != '':
             return raw.split("\n")
         else:
@@ -37,3 +40,10 @@ class gitupdateinputparser(object):
         resolver.old = old
         resolver.new = new
         return resolver
+
+class gitprecommitinputparser(object):
+    def parse(self):
+        resolver = gitinforesolver()
+        return resolver
+
+
