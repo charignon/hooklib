@@ -27,10 +27,7 @@ Write a basic git update hook that authorizes only pushing to master
   $ git remote add origin file:///$serverpath
   $ echo "a" > a
   $ git add a
-  $ git commit -am "Adding a"
-  [master (root-commit) *] Adding a (glob)
-   1 file changed, 1 insertion(+)
-   create mode 100644 a
+  $ git commit -am "Adding a" &> /dev/null
   $ git push origin master
   To file:///$TESTTMP/server
    * [new branch]      master -> master
@@ -56,9 +53,8 @@ Add a post-update hook that prints the refs that are pushed
   $ chmod +x ../server/hooks/post-update
   $ echo "x" > a
   $ git add a
-  $ git commit -am "Adding x"
-  [master *] Adding x (glob)
-   1 file changed, 1 insertion(+), 1 deletion(-)
+  $ git commit -am "Adding x" &> /dev/null
+
   $ git push origin master
   remote: New ref: refs/heads/master        
   To file:///$TESTTMP/server
@@ -79,9 +75,8 @@ Parallel hook execution
   $ chmod +x ../server/hooks/post-update
   $ echo "y" > a
   $ git add a
-  $ git commit -am "Adding y"
-  [master *] Adding y (glob)
-   1 file changed, 1 insertion(+), 1 deletion(-)
+  $ git commit -am "Adding y" &> /dev/null
+
   $ git push origin master
   remote: New ref: refs/heads/master        
   To file:///$TESTTMP/server
@@ -105,9 +100,8 @@ A hook to check that each commit message contains a message
   > EOF
   $ echo "z" > a
   $ git add a
-  $ git commit -am "Hello world"
-  [master *] Hello world (glob)
-   1 file changed, 1 insertion(+), 1 deletion(-)
+  $ git commit -am "Hello world" &> /dev/null
+
   $ git push origin master
   remote: you can only push commit with 'secretmessage' in the description        
   remote: error: hook declined to update refs/heads/master        
