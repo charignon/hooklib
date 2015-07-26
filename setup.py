@@ -13,7 +13,7 @@ setup(
     author_email="l.charignon@gmail.com",
     description="Hook helper library in python",
     keywords="hooks",
-    py_modules=['hooklib', 'hooklib_git', 'hooklib_input', 'util'],
+    py_modules=['hooklib', 'hooklib_git', 'hooklib_input', 'hooklib_hg'],
     long_description=open('README.md').read(),
     **extra
 )
