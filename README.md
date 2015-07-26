@@ -5,14 +5,16 @@ Python hook helper library:
 - Simple API: Don't learn the secret commands to peek inside your source control system, all you need is accessible and computed on the fly
 - Parallel/Sequential mode: Run your hooks in parallel or sequentially
 
-Currently only supports git.
+Currently only supports git and hg
 
 
 Example 1: gate commit on commit message format
 -
 Feel free to compare this to how you would do this without this library: https://git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy
 
-Save the following file under .git/hooks/update and make it executable to test it: 
+This hooks works for both git and hg:
+ - for git: put it in .git/hooks/update and make it executable for git
+ - for hg: put it wherever your want and reference it from your hg config
 
 ```python
 #!/usr/bin/python
