@@ -131,7 +131,9 @@ All the hooks!
   >         echo "class loghook(basehook):" >> $hpath
   >         echo "    def check(self, log, revdata):" >> $hpath
   >         echo "        with open('$serverpath/res','a') as k:" >> $hpath
-  >         echo "           k.write('$side: $hook %s\\\n' %sorted(vars(revdata)))"      >> $hpath
+  >         echo "           avalaiablevars = vars(revdata)" >> $hpath
+  >         echo "           del avalaiablevars['_revs']" >> $hpath
+  >         echo "           k.write('$side: $hook %s\\\n' %sorted(avalaiablevars))"      >> $hpath
   >         echo "        return True" >> $hpath
   >         echo "runhooks('$hook', hooks=[loghook])" >> $hpath
   >         chmod +x $hpath
@@ -155,20 +157,20 @@ All the hooks!
   $ echo "op: after push" >> $serverpath/res
   $ cat $serverpath/res
   op: before first commit
-  client: pre-commit ['_revs', 'reporoot']
-  client: prepare-commit-msg ['_revs', 'messagefile', 'mode', 'reporoot', 'sha']
-  client: commit-msg ['_revs', 'messagefile', 'reporoot']
-  client: post-commit ['_revs', 'reporoot']
+  client: pre-commit ['reporoot']
+  client: prepare-commit-msg ['messagefile', 'mode', 'reporoot', 'sha']
+  client: commit-msg ['messagefile', 'reporoot']
+  client: post-commit ['reporoot']
   op: after first commit
   op: before second commit
-  client: pre-commit ['_revs', 'reporoot']
-  client: prepare-commit-msg ['_revs', 'messagefile', 'mode', 'reporoot', 'sha']
+  client: pre-commit ['reporoot']
+  client: prepare-commit-msg ['messagefile', 'mode', 'reporoot', 'sha']
   op: after second commit
   op: before push
-  client: pre-push ['_revs', 'reporoot', 'revstobepushed']
-  server: pre-receive ['_revs', 'receivedrevs', 'reporoot']
-  server: update ['_revs', 'new', 'old', 'refname', 'reporoot']
-  server: post-receive ['_revs', 'receivedrevs', 'reporoot']
-  server: post-update ['_revs', 'reporoot']
+  client: pre-push ['reporoot', 'revstobepushed']
+  server: pre-receive ['receivedrevs', 'reporoot']
+  server: update ['new', 'old', 'refname', 'reporoot']
+  server: post-receive ['receivedrevs', 'reporoot']
+  server: post-update ['reporoot']
   op: after push
 
