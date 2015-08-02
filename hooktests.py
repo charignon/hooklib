@@ -146,5 +146,10 @@ class testscmresolution(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             revdata = inputparser.fromphase('unknown-phase')
 
+    def test_gitapplypatch_msg(self):
+        sys.argv = ['program.name', 'messagefile']
+        revdata = inputparser.fromphase('applypatch-msg').parse()
+        assert(revdata.messagefile == 'messagefile')
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,9 +1,14 @@
 from hooklib_git import gitpostupdateinputparser
 from hooklib_git import gitupdateinputparser
 from hooklib_git import gitprecommitinputparser
+from hooklib_git import gitapplypatchmsginputparser
 from hooklib_hg import hgupdateinputparser
 import os
 
+class applypatchmsginputparser(object):
+    @staticmethod
+    def findscm():
+        return gitapplypatchmsginputparser()
 
 class postupdateinputparser(object):
     @staticmethod
@@ -52,6 +57,8 @@ class inputparser(object):
             return updateinputparser.findscm()
         elif phase == 'pre-commit':
             return precommitinputparser.findscm()
+        elif phase == 'applypatch-msg':
+            return applypatchmsginputparser.findscm()
         else:
             raise NotImplementedError("Unsupported hook type %s"%(phase))
 

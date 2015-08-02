@@ -46,4 +46,10 @@ class gitprecommitinputparser(object):
         resolver = gitinforesolver()
         return resolver
 
+class gitapplypatchmsginputparser(object):
+    def parse(self):
+        messagefile = sys.argv[1]
+        resolver = gitinforesolver()
+        resolver.messagefile = messagefile
+        return resolver
 
