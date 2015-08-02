@@ -7,23 +7,22 @@ Python hook helper library:
 
 Supported hooks phases:
 
-Phase name  | SCM
+Phase name  | SCM | Available fields
 ------------- | -------------
-applypatch-msg  | Git
-pre-applypatch  | Git
-post-applypatch  | Git
-pre-commit  | Git
-prepare-commit-msg  | Git
-commit-msg  | Git
-post-commit  | Git
-pre-rebase  | Git
-pre-push  | Git
-pre-receive  | Git
-update  | Git, Hg
-post-receive  | Git
-post-update  | Git
-pre-auto-gc  | Git
-
+applypatch-msg  | Git | reporoot, head, messagefile
+pre-applypatch  | Git | reporoot, head
+post-applypatch  | Git | reporoot, head
+pre-commit  | Git | reporoot, head
+prepare-commit-msg  | Git | reporoot, head, messagefile, mode, sha
+commit-msg  | Git | reporoot, head, messagefile
+post-commit  | Git | reporoot, head
+pre-rebase  | Git | reporoot, head, upstream, rebased
+pre-push  | Git | reporoot, head, revstobepushed
+pre-receive  | Git | reporoot, head, receivedrevs
+update  | Git, Hg | reporoot(git), head(git), refname(git) old(git), new(git), rev(hg)
+post-receive  | Git | reporoot, head, receivedrevs
+post-update  | Git | reporoot, head, revs
+pre-auto-gc  | Git | reporoot, head
 Currently only supports git and hg
 
 

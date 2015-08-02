@@ -182,7 +182,7 @@ class gitprerebaseinputparser(basegitinputparser):
     available fields:
     - reporoot (str) => root of the repo
     - upstream (str) => upstream from which the serie was forked
-    - rebase (str) => branch being rebased, None if current branch
+    - rebased (str) => branch being rebased, None if current branch
     - head (str) => sha1 of HEAD"""
     def parse(self):
         upstream = sys.argv[1]
