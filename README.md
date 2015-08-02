@@ -16,6 +16,7 @@ pre-commit  | Git
 prepare-commit-msg  | Git
 commit-msg  | Git
 post-commit  | Git
+pre-rebase  | Git
 update  | Git, Hg
 post-update  | Git
 

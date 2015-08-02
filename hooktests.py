@@ -228,5 +228,22 @@ class testscmresolution(unittest.TestCase):
         parser = inputparser.fromphase('post-commit')
         assert(isinstance(parser, gitpostcommitinputparser))
 
+    def test_gitprerebase(self):
+        sys.argv = ['program.name', 'upstream', 'rebased']
+        parser = inputparser.fromphase('pre-rebase')
+        assert(isinstance(parser, gitprerebaseinputparser))
+        revdata = parser.parse()
+        assert(revdata.upstream == 'upstream')
+        assert(revdata.rebased == 'rebased')
+ 
+    def test_gitprerebasecurrentbranch(self):
+        sys.argv = ['program.name', 'upstream']
+        parser = inputparser.fromphase('pre-rebase')
+        assert(isinstance(parser, gitprerebaseinputparser))
+        revdata = parser.parse()
+        assert(revdata.upstream == 'upstream')
+        assert(revdata.rebased == None)
+        
+
 if __name__ == '__main__':
     unittest.main()

@@ -72,6 +72,19 @@ class gitapplypatchmsginputparser(basegitinputparser):
         resolver.messagefile = messagefile
         return resolver
 
+class gitprerebaseinputparser(basegitinputparser):
+    def parse(self):
+        upstream = sys.argv[1]
+        if len(sys.argv) > 2:
+            rebased = sys.argv[2]
+        else:
+            rebased = None
+        resolver = gitinforesolver()
+        resolver.upstream = upstream
+        resolver.rebased = rebased
+        return resolver
+
+
 class gitcommitmsginputparser(basegitinputparser):
     def parse(self):
         messagefile = sys.argv[1]
