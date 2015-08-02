@@ -117,6 +117,31 @@ Save the following file under .git/hooks/commit-msg and make it executable to te
   runhooks('commit-msg', hooks=[validatecommitmsg])  
   ```
 
+Example 5: validate unit test passing before commiting
+-
+
+The following hooks checks on the client side that the commit about to be made passes all unit tests.
+I have it enabled for this repo to make sure that I respect the format I intended to keep.
+Save the following file under .git/hooks/pre-commit and make it executable to test it:
+ 
+  ```python
+  from hooklib import basehook, runhooks 
+  import os
+  import subprocess
+  
+  class validateunittestpass(basehook): 
+       def check(self, log, revdata): 
+          testrun = "python %s/hooktests.py" % revdata.reporoot
+          ret = subprocess.call(testrun, shell=True, env={"PYTHONPATH":revdata.reporoot})
+          if ret == 0:
+              return True
+          else:
+              log.write("unit test failed, please check them")
+              return False
+  
+  runhooks('pre-commit', hooks=[validateunittestpass])  
+  ```
+
 Installation
 -
 ```
