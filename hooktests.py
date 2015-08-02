@@ -253,7 +253,7 @@ class testscmresolution(unittest.TestCase):
     def test_gitprereceive(self):
         revs = (('a'*40, 'b'*40, 'refs/heads/master'),
                 ('c'*40, 'd'*40, 'refs/heads/stable'))
-        dummyinput = ["%s %s %s\n" %(a, b, c) for (a, b, c) in revs]
+        dummyinput = [' '.join(r)+'\n' for r in revs]
         hooklib_input.readlines = MagicMock(return_value=dummyinput)
         revdata = inputparser.fromphase('pre-receive').parse()
         assert(revdata.receivedrevs == revs)
@@ -261,7 +261,7 @@ class testscmresolution(unittest.TestCase):
     def test_gitpostreceive(self):
         revs = (('a'*40, 'b'*40, 'refs/heads/master'),
                 ('c'*40, 'd'*40, 'refs/heads/stable'))
-        dummyinput = ["%s %s %s\n" %(a, b, c) for (a, b, c) in revs]
+        dummyinput = [' '.join(r)+'\n' for r in revs]
         hooklib_input.readlines = MagicMock(return_value=dummyinput)
         revdata = inputparser.fromphase('post-receive').parse()
         assert(revdata.receivedrevs == revs)
@@ -269,7 +269,7 @@ class testscmresolution(unittest.TestCase):
     def test_gitprepush(self):
         revs = (('refs/heads/master', 'a'*40, 'refs/heads/foreign', 'b'*40),
                 ('refs/heads/master', 'a'*40, 'refs/heads/foreign', '0'*40))
-        dummyinput = ["%s %s %s %s\n" %(a, b, c, d) for (a, b, c, d) in revs]
+        dummyinput = [' '.join(r)+'\n' for r in revs]
         hooklib_input.readlines = MagicMock(return_value=dummyinput)
         revdata = inputparser.fromphase('pre-push').parse()
         assert(revdata.revstobepushed == revs)
