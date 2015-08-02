@@ -173,18 +173,22 @@ Your hook's check function will get called with a log and a revdata object:
 For example, if you are writing a `commit-msg` hook, `revdata.messagefile` will be the filename of the file containing the commit message to validate.
 You can get the complete list of the accessible fields by looking at the documentation of the class for the hook in question.
 
-If you want to know the field available in `revdata` for the `pre-commit` hook for git. Look into `hooklib_git.py`, find the class `gitprecommitinputparser` and look at its pydoc:
+If you want to know the field available in `revdata` for the `pre-receive` hook for git. Look into `hooklib_git.py`, find the class `gitprereceiveinputparser` and look at its pydoc:
 
 In a python shell:
 
 ```
 >>> from hooklib_git import *
->>> help(gitprecommitinputparser)
-class gitprecommitinputparser(basegitinputparser)
- |  Input parser for the 'pre-commit' phase
+>>> help(gitprereceiveinputparser)
+Help on class gitprereceiveinputparser in module hooklib_git:
+
+class gitprereceiveinputparser(gitreceiveinputparser)
+ |  input parser for the 'pre-receive' phase
  |
- |  Available fields:
+ |  available fields:
  |  - reporoot (str) => root of the repo
+ |  - receivedrevs =>
+ |      (list of tuples: (<old-value> <new-value> <ref-name>))
  |  - head (str) => sha1 of HEAD
  |
 ...
