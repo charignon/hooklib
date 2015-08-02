@@ -118,7 +118,12 @@ A hook to check that each commit message contains a message
 
 All the hooks!
   $ for hook in "applypatch-msg" "pre-applypatch" "post-applypatch" "pre-commit"  "prepare-commit-msg"  "commit-msg" "post-commit"  "pre-rebase"  "pre-push"  "pre-receive" "update"  "post-receive"  "post-update"; do 
-  >     for hpath in "$serverpath/hooks/$hook" "$clientpath/.git/hooks/$hook"; do
+  >     for side in "server" "client"; do
+  >         if [[ $side == "server" ]]; then
+  >             hpath="$serverpath/hooks/$hook"
+  >         else
+  >             hpath="$clientpath/.git/hooks/$hook"
+  >         fi;
   >         rm -f $hpath
   >         mkdir -p $(dirname $hpath)
   >         echo "#!/usr/bin/python" >> $hpath
@@ -126,7 +131,7 @@ All the hooks!
   >         echo "class loghook(basehook):" >> $hpath
   >         echo "    def check(self, log, revdata):" >> $hpath
   >         echo "        with open('$serverpath/res','a') as k:" >> $hpath
-  >         echo "           k.write('$hook\\\n')"      >> $hpath
+  >         echo "           k.write('$side: $hook\\\n')"      >> $hpath
   >         echo "        return True" >> $hpath
   >         echo "runhooks('$hook', hooks=[loghook])" >> $hpath
   >         chmod +x $hpath
@@ -137,15 +142,15 @@ All the hooks!
   $ git commit -am "Hello world" &> /dev/null
   $ git push origin master
   To file:///$TESTTMP/server
-     5cbe79e..1dd06c1  master -> master
+     *..*  master -> master (glob)
   $ cat $serverpath/res
-  pre-commit
-  prepare-commit-msg
-  commit-msg
-  post-commit
-  pre-push
-  pre-receive
-  update
-  post-receive
-  post-update
+  client: pre-commit
+  client: prepare-commit-msg
+  client: commit-msg
+  client: post-commit
+  client: pre-push
+  server: pre-receive
+  server: update
+  server: post-receive
+  server: post-update
 
