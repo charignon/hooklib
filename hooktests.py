@@ -219,7 +219,12 @@ class testscmresolution(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     parser.parse()
 
-    
+    def test_gitcommitmsg(self):
+        sys.argv = ['program.name', 'messagefile']
+        revdata = inputparser.fromphase('commit-msg').parse()
+        assert(revdata.messagefile == 'messagefile')
+
+
 
 if __name__ == '__main__':
     unittest.main()

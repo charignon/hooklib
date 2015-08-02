@@ -67,6 +67,13 @@ class gitapplypatchmsginputparser(basegitinputparser):
         resolver.messagefile = messagefile
         return resolver
 
+class gitcommitmsginputparser(basegitinputparser):
+    def parse(self):
+        messagefile = sys.argv[1]
+        resolver = gitinforesolver()
+        resolver.messagefile = messagefile
+        return resolver
+
 class gitpreparecommitmsginputparser(basegitinputparser):
     def parse(self):
         messagefile = sys.argv[1]
