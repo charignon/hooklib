@@ -8,7 +8,7 @@ if sys.version_info >= (3,):
 
 setup(
     name="hooklib",
-    version="0.2",
+    version="0.2.1",
     author="Laurent Charignon",
     author_email="l.charignon@gmail.com",
     description="Hook helper library in python",

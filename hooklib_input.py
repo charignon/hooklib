@@ -1,18 +1,5 @@
-from hooklib_git import gitpostupdateinputparser
-from hooklib_git import gitupdateinputparser
-from hooklib_git import gitprecommitinputparser
-from hooklib_git import gitpreapplypatchinputparser
-from hooklib_git import gitapplypatchmsginputparser
-from hooklib_git import gitpostapplypatchinputparser
-from hooklib_git import gitcommitmsginputparser
-from hooklib_git import gitpostcommitinputparser
-from hooklib_git import gitprepushinputparser
-from hooklib_git import gitprerebaseinputparser
-from hooklib_git import gitpreautogcinputparser
-from hooklib_git import gitprereceiveinputparser
-from hooklib_git import gitpostreceiveinputparser
-from hooklib_git import gitpreparecommitmsginputparser
-from hooklib_hg import hgupdateinputparser
+from hooklib_git import *
+from hooklib_hg import *
 import os
 import sys
 

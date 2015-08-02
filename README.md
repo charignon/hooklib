@@ -144,6 +144,7 @@ Save the following file under .git/hooks/pre-commit and make it executable to te
   runhooks('pre-commit', hooks=[validateunittestpass])  
   ```
 
+
 Installation
 -
 You can use pip:
@@ -157,6 +158,26 @@ Or install it directly from the repo:
 git clone https://github.com/charignon/hooklib.git
 sudo python setup.py install
 sudo pip install mercurial
+```
+
+User Guide
+-
+
+Once you have installed the library, you can start writing you first hook.
+You can start by taking one of the example as a template.
+Your hook's check function will get called with a log and a revdata object.
+The check function should return True if the hook passes and False otherwise.
+The log object can be used to send feedback to the user, for example, if your hook rejects a commit, you can explain what justifies the rejection.
+The revdata object allows you to get all the information that you need to make the decision of returning True or False from your hook. It contains different information based on what hook you are writing and it is based on what git or hg gives as argument and environment variable when calling the hook.
+For example, if you are writing a `commit-msg` hook, `revdata.messagefile` will be the filename of the file containing the commit message to validate.
+You can get the complete list of the accessible fields by looking at the documentation of the class for the hook in question.
+For example, if you want to know the field available in `revdata` for the `pre-commit` hook for git. Look into `hooklib_git.py`, find the class `gitprecommitinputparser` and look at its pydoc:
+
+In a python shell:
+
+```
+>>> from hooklib_git import *
+>>> help(gitprecommitinputparser)
 ```
 
 Contributing
