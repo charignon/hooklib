@@ -219,5 +219,7 @@ class testscmresolution(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     parser.parse()
 
+    
+
 if __name__ == '__main__':
     unittest.main()

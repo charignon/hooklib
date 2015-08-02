@@ -59,6 +59,9 @@ class precommitinputparser(object):
             raise NotImplementedError("No implemented for your SCM")
 
 class dummyinputparser(object):
+    @staticmethod
+    def findscm():
+        return dummyinputparser()
     def parse(self):
         return None
 
@@ -82,23 +85,18 @@ class inputparser(object):
         """Factory method to return an appropriate input parser
         For example if the phase is 'post-update' and that the git env
         variables are set, we infer that we need a git postupdate inputparser"""
-        if phase == None:
-            return dummyinputparser()
-        elif phase == 'post-update':
-            return postupdateinputparser.findscm()
-        elif phase == 'update':
-            return updateinputparser.findscm()
-        elif phase == 'pre-commit':
-            return precommitinputparser.findscm()
-        elif phase == 'applypatch-msg':
-            return applypatchmsginputparser.findscm()
-        elif phase == 'pre-applypatch':
-            return preapplypatchinputparser.findscm()
-        elif phase == 'post-applypatch':
-            return postapplypatchinputparser.findscm()
-        elif phase == 'prepare-commit-msg':
-            return preparecommitmsginputparser.findscm()
-        else:
+        phasemapping = {
+            None: dummyinputparser,
+            'applypatch-msg': applypatchmsginputparser,
+            'pre-applypatch': preapplypatchinputparser,
+            'post-applypatch': postapplypatchinputparser,
+            'pre-commit': precommitinputparser,
+            'prepare-commit-msg': preparecommitmsginputparser,
+            'update': updateinputparser,
+            'post-update': postupdateinputparser,
+        }
+        try:
+            return phasemapping[phase].findscm()
+        except KeyError:
             raise NotImplementedError("Unsupported hook type %s"%(phase))
-
 
