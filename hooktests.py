@@ -1,6 +1,9 @@
 import unittest
 import time
 from hooklib import hookrunner, basehook, parallelhookrunner
+from hooklib_input import inputparser
+import os
+import sys
 
 class passinghook(basehook):
     def check(self, log, revdata):
@@ -94,6 +97,54 @@ class testparallelhookrunner(unittest.TestCase):
             runner.register(passinghook)
         assert(runner.evaluate() == False)
 
+class testscmresolution(unittest.TestCase):
+    """Checking that we get the right SCM parser for different hook type"""
+    
+    def setUp(self):
+        self.origargv = list(sys.argv)
+        self.origenv = os.environ.copy()
+
+    def tearDown(self):
+        os.environ = self.origenv
+        sys.argv = self.origargv
+    
+    def test_git_postupdate(self):
+        os.environ["GIT_DIR"] = "."
+        sys.argv = ["program.name", "a"*40]
+        revdata = inputparser.fromphase('post-update').parse()
+        assert(revdata.revs == ["a"*40])
+    
+    def test_hg_postupdate(self):
+        os.environ["HG_NODE"] = "."
+        with self.assertRaises(NotImplementedError):
+            revdata = inputparser.fromphase('post-update')
+
+    def test_git_update(self):
+        os.environ["GIT_DIR"] = "."
+        sys.argv = ["program.name", "a"*40, "0"*40, "1"*40]
+        revdata = inputparser.fromphase('update').parse()
+        assert(revdata.refname == "a"*40)
+        assert(revdata.old == "0"*40)
+        assert(revdata.new == "1"*40)
+    
+    def test_hg_update(self):
+        os.environ["HG_NODE"] = "a"*40
+        revdata = inputparser.fromphase('update').parse()
+        assert(revdata.revs == ["a"*40])
+    
+    def test_git_precommit(self):
+        os.environ["GIT_DIR"] = "."
+        sys.argv = ["program.name"]
+        revdata = inputparser.fromphase('pre-commit').parse()
+
+    def test_hg_precommit(self):
+        os.environ["HG_NODE"] = "."
+        with self.assertRaises(NotImplementedError):
+            revdata = inputparser.fromphase('pre-commit')
+    
+    def test_unknown_hookname(self):
+        with self.assertRaises(NotImplementedError):
+            revdata = inputparser.fromphase('unknown-phase')
 
 if __name__ == '__main__':
     unittest.main()

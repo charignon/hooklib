@@ -4,6 +4,7 @@ from hooklib_git import gitprecommitinputparser
 from hooklib_hg import hgupdateinputparser
 import os
 
+
 class postupdateinputparser(object):
     @staticmethod
     def findscm():
@@ -11,7 +12,7 @@ class postupdateinputparser(object):
         if 'GIT_DIR' in os.environ:
             return gitpostupdateinputparser()
         else:
-            raise Exception("No implemented for your SCM")
+            raise NotImplementedError("No implemented for your SCM")
 
 
 class updateinputparser(object):
@@ -23,7 +24,7 @@ class updateinputparser(object):
         elif 'HG_NODE' in os.environ:
             return hgupdateinputparser()
         else:
-            raise Exception("No implemented for your SCM")
+            raise NotImplementedError("No implemented for your SCM")
 
 class precommitinputparser(object):
     @staticmethod
@@ -31,8 +32,7 @@ class precommitinputparser(object):
         if 'GIT_DIR' in os.environ:
             return gitprecommitinputparser()
         else:
-            raise Exception("No implemented for your SCM")
-
+            raise NotImplementedError("No implemented for your SCM")
 
 class dummyinputparser(object):
     def parse(self):
@@ -53,6 +53,6 @@ class inputparser(object):
         elif phase == 'pre-commit':
             return precommitinputparser.findscm()
         else:
-            raise Exception("Unsupported hook type %s"%(phase))
+            raise NotImplementedError("Unsupported hook type %s"%(phase))
 
 
