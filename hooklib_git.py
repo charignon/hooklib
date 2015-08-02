@@ -1,4 +1,5 @@
 from mercurial import util
+import hooklib_input
 import sys
 import os
 
@@ -69,6 +70,20 @@ class gitpreautogcinputparser(basegitinputparser):
     def parse(self):
         resolver = gitinforesolver()
         return resolver
+
+class gitreceiveinputparser(basegitinputparser):
+    def parse(self):
+        resolver = gitinforesolver()
+        rawrevs = hooklib_input.readlines()
+        revs = tuple([tuple(line.strip().split(' ')) for line in rawrevs])
+        resolver.receivedrevs = revs
+        return resolver
+
+class gitpostreceiveinputparser(gitreceiveinputparser):
+    pass
+
+class gitprereceiveinputparser(gitreceiveinputparser):
+    pass
 
 class gitapplypatchmsginputparser(basegitinputparser):
     def parse(self):

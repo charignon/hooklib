@@ -1,5 +1,7 @@
 import unittest
 import time
+from mock import MagicMock
+import hooklib_input
 from hooklib import hookrunner, basehook, parallelhookrunner
 from hooklib_input import inputparser
 from hooklib_git import *
@@ -248,8 +250,24 @@ class testscmresolution(unittest.TestCase):
         parser = inputparser.fromphase('pre-auto-gc')
         assert(isinstance(parser, gitpreautogcinputparser))
 
-    # TODO post-checkout, post-merge, pre-push, pre-receive, post-receive,
-    # push-to-checkout, post-rewrite, rebase
+    def test_gitprereceive(self):
+        revs = (('a'*40, 'b'*40, 'refs/heads/master'),
+                ('c'*40, 'd'*40, 'refs/heads/stable'))
+        dummyinput = ["%s %s %s\n" %(a, b, c) for (a, b, c) in revs]
+        hooklib_input.readlines = MagicMock(return_value=dummyinput)
+        revdata = inputparser.fromphase('pre-receive').parse()
+        assert(revdata.receivedrevs == revs)
+
+    def test_gitpostreceive(self):
+        revs = (('a'*40, 'b'*40, 'refs/heads/master'),
+                ('c'*40, 'd'*40, 'refs/heads/stable'))
+        dummyinput = ["%s %s %s\n" %(a, b, c) for (a, b, c) in revs]
+        hooklib_input.readlines = MagicMock(return_value=dummyinput)
+        revdata = inputparser.fromphase('post-receive').parse()
+        assert(revdata.receivedrevs == revs)
+
+    # TODO post-checkout, post-merge, pre-push, push-to-checkout, post-rewrite
+    # TODO add documentation for what is available for each kind of hooks
     # see https://git-scm.com/docs/githooks
 
 if __name__ == '__main__':
