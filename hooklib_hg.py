@@ -11,5 +11,3 @@ class hgupdateinputparser(object):
         resolver = hginforesolver()
         resolver.revs = [rev]
         return resolver
-
-

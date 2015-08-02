@@ -2,6 +2,7 @@ import unittest
 import time
 from hooklib import hookrunner, basehook, parallelhookrunner
 from hooklib_input import inputparser
+from hooklib_git import gitinforesolver
 import os
 import sys
 
@@ -136,6 +137,7 @@ class testscmresolution(unittest.TestCase):
         os.environ["GIT_DIR"] = "."
         sys.argv = ["program.name"]
         revdata = inputparser.fromphase('pre-commit').parse()
+        assert(isinstance(revdata, gitinforesolver))
 
     def test_hg_precommit(self):
         os.environ["HG_NODE"] = "."
@@ -146,10 +148,15 @@ class testscmresolution(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             revdata = inputparser.fromphase('unknown-phase')
 
-    def test_gitapplypatch_msg(self):
+    def test_gitapplypatchmsg(self):
         sys.argv = ['program.name', 'messagefile']
         revdata = inputparser.fromphase('applypatch-msg').parse()
         assert(revdata.messagefile == 'messagefile')
+
+    def test_gitpreapplypatch(self):
+        revdata = inputparser.fromphase('pre-applypatch').parse()
+        assert(isinstance(revdata, gitinforesolver))
+
 
 if __name__ == '__main__':
     unittest.main()
