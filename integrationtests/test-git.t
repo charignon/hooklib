@@ -173,4 +173,3 @@ All the hooks!
   server: post-receive ['receivedrevs', 'reporoot']
   server: post-update ['reporoot']
   op: after push
-
