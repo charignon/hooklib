@@ -44,9 +44,12 @@ class hooklog(object):
         return ret
 
 class hookrunner(object):
-    def __init__(self, phase=None):
+    def __init__(self, phase=None, phases=None):
         self.runlist = []
-        self.revdata = inputparser.fromphase(phase).parse()
+        if phases is not None:
+            self.revdata = inputparser.fromphases(phases).parse()
+        else:
+            self.revdata = inputparser.fromphase(phase).parse()
 
     def register(self, h, blocking=True):
         self.runlist.append((h, blocking))

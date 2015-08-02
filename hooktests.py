@@ -183,5 +183,41 @@ class testscmresolution(unittest.TestCase):
                                          ('git','post-applypatch')))
         assert(isinstance(parser, gitpostapplypatchinputparser))
 
+    def test_cascade_hook_notfound(self):
+        os.environ["HG_NODE"] = "a"*40
+        with self.assertRaises(NotImplementedError):
+            parser = inputparser.fromphases((('hg','post-applypatch'), 
+                                             ('git','blah')))
+
+    def test_gitpreparecommitmsg(self):
+        # possible options
+        # message, template, merge, squash, commit
+        cases = (
+                    # valid arg, list of args
+                    (True, 'commitlogmsg', 'message'),
+                    (False, 'commitlogmsg', 'message', 'a'*40),
+                    (True, 'commitlogmsg', 'template'),
+                    (False, 'commitlogmsg', 'template', 'a'*40),
+                    (True, 'commitlogmsg', 'merge'),
+                    (False, 'commitlogmsg', 'merge', 'a'*40),
+                    (True, 'commitlogmsg', 'squash'),
+                    (False, 'commitlogmsg', 'squash', 'a'*40),
+                    (False, 'commitlogmsg', 'commit'),
+                    (True, 'commitlogmsg', 'commit', 'a'*40),
+                    (False, 'commitlogmsg', 'illegal'),
+                )
+        
+        for case in cases:
+            valid = case[0]
+            args = case[1:]
+            sys.argv = ['program.name'] + list(args)
+            parser = inputparser.fromphase('prepare-commit-msg')
+            assert(isinstance(parser, gitpreparecommitmsginputparser))
+            if valid:
+                parser.parse() # not exception
+            else:
+                with self.assertRaises(ValueError):
+                    parser.parse()
+
 if __name__ == '__main__':
     unittest.main()

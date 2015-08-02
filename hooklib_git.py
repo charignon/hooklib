@@ -67,3 +67,24 @@ class gitapplypatchmsginputparser(basegitinputparser):
         resolver.messagefile = messagefile
         return resolver
 
+class gitpreparecommitmsginputparser(basegitinputparser):
+    def parse(self):
+        messagefile = sys.argv[1]
+        mode = None
+        sha = None
+        if len(sys.argv) > 2:
+            mode = sys.argv[2]
+        if len(sys.argv) > 3:
+            sha = sys.argv[3]
+        if mode not in ('message', 'template', 'merge', 'squash', 'commit'):
+            raise ValueError('Invalid Second Argument: mode')
+        if mode != 'commit' and sha is not None:
+            raise ValueError('Invalid Third Argument')
+        if mode == 'commit' and sha is None:
+            raise ValueError('Missing Third Argument')
+        resolver = gitinforesolver()
+        resolver.messagefile = messagefile
+        resolver.mode = mode
+        resolver.sha = sha
+        return resolver
+

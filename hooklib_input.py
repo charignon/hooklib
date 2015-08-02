@@ -4,8 +4,14 @@ from hooklib_git import gitprecommitinputparser
 from hooklib_git import gitpreapplypatchinputparser
 from hooklib_git import gitapplypatchmsginputparser
 from hooklib_git import gitpostapplypatchinputparser
+from hooklib_git import gitpreparecommitmsginputparser
 from hooklib_hg import hgupdateinputparser
 import os
+
+class preparecommitmsginputparser(object):
+    @staticmethod
+    def findscm():
+        return gitpreparecommitmsginputparser()
 
 class preapplypatchinputparser(object):
     @staticmethod
@@ -59,19 +65,17 @@ class dummyinputparser(object):
 class inputparser(object):
     @staticmethod
     def fromphases(p):
-        parser = None
         for scm, phasename in p:
             try:
-                parser = inputparser.fromphase(phasename)
-                if parser.scm() == scm:
-                    return parser
+                parserforphase = inputparser.fromphase(phasename)
+                if parserforphase.scm() == scm:
+                    return parserforphase
                 else:
                     continue
             except NotImplementedError:
                 pass
-        if parser is None:
-            raise NotImplementedError("Couldn't find phase matching"
-                                      " conditions")
+        raise NotImplementedError("Couldn't find phase matching"
+                                  " conditions")
 
     @staticmethod
     def fromphase(phase):
@@ -92,6 +96,8 @@ class inputparser(object):
             return preapplypatchinputparser.findscm()
         elif phase == 'post-applypatch':
             return postapplypatchinputparser.findscm()
+        elif phase == 'prepare-commit-msg':
+            return preparecommitmsginputparser.findscm()
         else:
             raise NotImplementedError("Unsupported hook type %s"%(phase))
 
