@@ -185,6 +185,7 @@ Contributing
 Before sending a Pull-Request please run the tests:
 
 - To run the unit tests, simply call `python hooktests.py`, let's keep the unit test suite running under 1s
+  You have to install mock to run the tests: `sudo pip install mock==1.0.0`
 - To run the integration tests, download run-tests.py from the mercurial repo "https://selenic.com/hg/file/tip/tests/run-tests.py"
 Then you can run the tests with `python run-tests.py test-git.t -l` (I only have tests for git so far)
 
