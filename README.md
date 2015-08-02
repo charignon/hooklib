@@ -19,6 +19,7 @@ post-commit  | Git
 pre-rebase  | Git
 update  | Git, Hg
 post-update  | Git
+pre-auto-gc  | Git
 
 Currently only supports git and hg
 

@@ -243,9 +243,13 @@ class testscmresolution(unittest.TestCase):
         revdata = parser.parse()
         assert(revdata.upstream == 'upstream')
         assert(revdata.rebased == None)
-    
+
+    def test_gitpreautogc(self):
+        parser = inputparser.fromphase('pre-auto-gc')
+        assert(isinstance(parser, gitpreautogcinputparser))
+
     # TODO post-checkout, post-merge, pre-push, pre-receive, post-receive,
-    # push-to-checkout, pre-auto-gc, post-rewrite, rebase
+    # push-to-checkout, post-rewrite, rebase
     # see https://git-scm.com/docs/githooks
 
 if __name__ == '__main__':

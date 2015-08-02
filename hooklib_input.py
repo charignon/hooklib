@@ -7,6 +7,7 @@ from hooklib_git import gitpostapplypatchinputparser
 from hooklib_git import gitcommitmsginputparser
 from hooklib_git import gitpostcommitinputparser
 from hooklib_git import gitprerebaseinputparser
+from hooklib_git import gitpreautogcinputparser
 from hooklib_git import gitpreparecommitmsginputparser
 from hooklib_hg import hgupdateinputparser
 import os
@@ -15,6 +16,11 @@ class preparecommitmsginputparser(object):
     @staticmethod
     def findscm():
         return gitpreparecommitmsginputparser()
+
+class preautogcinputparser(object):
+    @staticmethod
+    def findscm():
+        return gitpreautogcinputparser()
 
 class prerebaseinputparser(object):
     @staticmethod
@@ -114,6 +120,7 @@ class inputparser(object):
             'pre-rebase': prerebaseinputparser,
             'update': updateinputparser,
             'post-update': postupdateinputparser,
+            'pre-auto-gc': preautogcinputparser,
         }
         try:
             return phasemapping[phase].findscm()
