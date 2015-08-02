@@ -164,8 +164,10 @@ User Guide
 -
 
 Once you have installed the library, you can start writing you first hook.
-You can start by taking one of the example as a template.
-Your hook's check function will get called with a log and a revdata object:
+It is easy to just get started by copy-pasting one of the examples.
+A hook should is a python class that derives from the base class `basehook`.
+
+The hook's `check(self, log, revdata)` instance function will get called with a `log` and a `revdata` object:
 - The `check` function should return True if the hook passes and False otherwise.
 - The `log` object can be used to send feedback to the user, for example, if your hook rejects a commit, you can explain what justifies the rejection. You can use `log.write(str)` as shown in the examples
 - The `revdata` object allows you to get all the information that you need about the state of the repo.
@@ -196,7 +198,7 @@ class gitprereceiveinputparser(gitreceiveinputparser)
 
 Contributing
 -
-Before sending a Pull-Request please run the tests:
+Before sending a Pull Request please run the tests:
 
 - To run the unit tests, simply call `python hooktests.py`, let's keep the unit test suite running under 1s
   You have to install mock to run the tests: `sudo pip install mock==1.0.0`
