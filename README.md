@@ -5,6 +5,18 @@ Python hook helper library:
 - Simple API: Don't learn the secret commands to peek inside your source control system, all you need is accessible and computed on the fly
 - Parallel/Sequential mode: Run your hooks in parallel or sequentially
 
+Supported hooks phases:
+
+Phase name  | SCM
+------------- | -------------
+applypatch-msg  | Git
+pre-applypatch  | Git
+post-applypatch  | Git
+pre-commit  | Git
+prepare-commit-msg  | Git
+update  | Git, Hg
+post-update  | Git
+
 Currently only supports git and hg
 
 
