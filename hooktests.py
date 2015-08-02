@@ -243,7 +243,10 @@ class testscmresolution(unittest.TestCase):
         revdata = parser.parse()
         assert(revdata.upstream == 'upstream')
         assert(revdata.rebased == None)
-        
+    
+    # TODO post-checkout, post-merge, pre-push, pre-receive, post-receive,
+    # push-to-checkout, pre-auto-gc, post-rewrite, rebase
+    # see https://git-scm.com/docs/githooks
 
 if __name__ == '__main__':
     unittest.main()

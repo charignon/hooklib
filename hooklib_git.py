@@ -84,7 +84,6 @@ class gitprerebaseinputparser(basegitinputparser):
         resolver.rebased = rebased
         return resolver
 
-
 class gitcommitmsginputparser(basegitinputparser):
     def parse(self):
         messagefile = sys.argv[1]
