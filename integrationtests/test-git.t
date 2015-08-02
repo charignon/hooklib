@@ -139,18 +139,36 @@ All the hooks!
   > done;
   $ echo "u" > a
   $ git add a
+  $ echo "op: before first commit" >> $serverpath/res
   $ git commit -am "Hello world" &> /dev/null
+  $ echo "op: after first commit" >> $serverpath/res
+  $ echo "t" > b
+  $ git add b
+  $ echo "op: before second commit" >> $serverpath/res
+  $ git commit -a --amend &>/dev/null
+  [1]
+  $ echo "op: after second commit" >> $serverpath/res
+  $ echo "op: before push" >> $serverpath/res
   $ git push origin master
   To file:///$TESTTMP/server
      *..*  master -> master (glob)
+  $ echo "op: after push" >> $serverpath/res
   $ cat $serverpath/res
+  op: before first commit
   client: pre-commit
   client: prepare-commit-msg
   client: commit-msg
   client: post-commit
+  op: after first commit
+  op: before second commit
+  client: pre-commit
+  client: prepare-commit-msg
+  op: after second commit
+  op: before push
   client: pre-push
   server: pre-receive
   server: update
   server: post-receive
   server: post-update
+  op: after push
 
