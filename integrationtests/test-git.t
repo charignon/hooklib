@@ -24,6 +24,7 @@ Write a basic git update hook that authorizes only pushing to master
   $ git init client
   Initialized empty Git repository in $TESTTMP/client/.git/
   $ cd client
+  $ clientpath=$(pwd)
   $ git remote add origin file:///$serverpath
   $ echo "a" > a
   $ git add a
@@ -114,4 +115,37 @@ A hook to check that each commit message contains a message
   remote: New ref: refs/heads/master        
   To file:///$TESTTMP/server
      *..*  master -> master (glob)
+
+All the hooks!
+  $ for hook in "applypatch-msg" "pre-applypatch" "post-applypatch" "pre-commit"  "prepare-commit-msg"  "commit-msg" "post-commit"  "pre-rebase"  "pre-push"  "pre-receive" "update"  "post-receive"  "post-update"; do 
+  >     for hpath in "$serverpath/hooks/$hook" "$clientpath/.git/hooks/$hook"; do
+  >         rm -f $hpath
+  >         mkdir -p $(dirname $hpath)
+  >         echo "#!/usr/bin/python" >> $hpath
+  >         echo "from hooklib import basehook, runhooks" >> $hpath
+  >         echo "class loghook(basehook):" >> $hpath
+  >         echo "    def check(self, log, revdata):" >> $hpath
+  >         echo "        with open('$serverpath/res','a') as k:" >> $hpath
+  >         echo "           k.write('$hook\\\n')"      >> $hpath
+  >         echo "        return True" >> $hpath
+  >         echo "runhooks('$hook', hooks=[loghook])" >> $hpath
+  >         chmod +x $hpath
+  >     done;
+  > done;
+  $ echo "u" > a
+  $ git add a
+  $ git commit -am "Hello world" &> /dev/null
+  $ git push origin master
+  To file:///$TESTTMP/server
+     5cbe79e..1dd06c1  master -> master
+  $ cat $serverpath/res
+  pre-commit
+  prepare-commit-msg
+  commit-msg
+  post-commit
+  pre-push
+  pre-receive
+  update
+  post-receive
+  post-update
 
