@@ -1,4 +1,4 @@
-# hooklib: write source control hooks in Python
+# hooklib: easy source control hooks in Python
 
 Python hook helper library:
 - SCM Agnostic: Can work with different SCM (git, svn, hg), write your hook once and they work on other SCMs
