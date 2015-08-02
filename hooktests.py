@@ -2,7 +2,7 @@ import unittest
 import time
 from hooklib import hookrunner, basehook, parallelhookrunner
 from hooklib_input import inputparser
-from hooklib_git import gitinforesolver
+from hooklib_git import *
 import os
 import sys
 
@@ -154,12 +154,14 @@ class testscmresolution(unittest.TestCase):
         assert(revdata.messagefile == 'messagefile')
 
     def test_gitpreapplypatch(self):
-        revdata = inputparser.fromphase('pre-applypatch').parse()
-        assert(isinstance(revdata, gitinforesolver))
+        parser = inputparser.fromphase('pre-applypatch')
+        assert(isinstance(parser, gitpreapplypatchinputparser))
+        assert(isinstance(parser.parse(), gitinforesolver))
     
     def test_gitpostapplypatch(self):
-        revdata = inputparser.fromphase('pre-applypatch').parse()
-        assert(isinstance(revdata, gitinforesolver))
+        parser = inputparser.fromphase('post-applypatch')
+        assert(isinstance(parser, gitpostapplypatchinputparser))
+        assert(isinstance(parser.parse(), gitinforesolver))
 
 if __name__ == '__main__':
     unittest.main()

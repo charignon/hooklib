@@ -15,7 +15,7 @@ class preapplypatchinputparser(object):
 class postapplypatchinputparser(object):
     @staticmethod
     def findscm():
-        return gitpostpplypatchinputparser()
+        return gitpostapplypatchinputparser()
 
 
 class applypatchmsginputparser(object):
