@@ -274,8 +274,7 @@ class testscmresolution(unittest.TestCase):
         revdata = inputparser.fromphase('pre-push').parse()
         assert(revdata.revstobepushed == revs)
 
-
-    # TODO post-checkout, post-merge,  push-to-checkout, post-rewrite
+    # TODO post-checkout, post-merge, push-to-checkout, post-rewrite
     # TODO add documentation for what is available for each kind of hooks
     # see https://git-scm.com/docs/githooks
 
