@@ -133,7 +133,7 @@ All the hooks!
   >         echo "        with open('$serverpath/res','a') as k:" >> $hpath
   >         echo "           avalaiablevars = vars(revdata)" >> $hpath
   >         echo "           del avalaiablevars['_revs']" >> $hpath
-  >         echo "           k.write('$side: $hook %s\\\n' %sorted(avalaiablevars))"      >> $hpath
+  >         echo "           k.write('$side: $hook %s head %s\\\n' %(sorted(avalaiablevars), revdata.head))"      >> $hpath
   >         echo "        return True" >> $hpath
   >         echo "runhooks('$hook', hooks=[loghook])" >> $hpath
   >         chmod +x $hpath
@@ -157,19 +157,19 @@ All the hooks!
   $ echo "op: after push" >> $serverpath/res
   $ cat $serverpath/res
   op: before first commit
-  client: pre-commit ['reporoot']
-  client: prepare-commit-msg ['messagefile', 'mode', 'reporoot', 'sha']
-  client: commit-msg ['messagefile', 'reporoot']
-  client: post-commit ['reporoot']
+  client: pre-commit ['reporoot'] head * (glob)
+  client: prepare-commit-msg ['messagefile', 'mode', 'reporoot', 'sha'] head * (glob)
+  client: commit-msg ['messagefile', 'reporoot'] head * (glob)
+  client: post-commit ['reporoot'] head * (glob)
   op: after first commit
   op: before second commit
-  client: pre-commit ['reporoot']
-  client: prepare-commit-msg ['messagefile', 'mode', 'reporoot', 'sha']
+  client: pre-commit ['reporoot'] head * (glob)
+  client: prepare-commit-msg ['messagefile', 'mode', 'reporoot', 'sha'] head * (glob)
   op: after second commit
   op: before push
-  client: pre-push ['reporoot', 'revstobepushed']
-  server: pre-receive ['receivedrevs', 'reporoot']
-  server: update ['new', 'old', 'refname', 'reporoot']
-  server: post-receive ['receivedrevs', 'reporoot']
-  server: post-update ['reporoot']
+  client: pre-push ['reporoot', 'revstobepushed'] head * (glob)
+  server: pre-receive ['receivedrevs', 'reporoot'] head * (glob)
+  server: update ['new', 'old', 'refname', 'reporoot'] head * (glob)
+  server: post-receive ['receivedrevs', 'reporoot'] head * (glob)
+  server: post-update ['reporoot'] head * (glob)
   op: after push

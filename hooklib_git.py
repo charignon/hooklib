@@ -17,11 +17,15 @@ class gitinforesolver(object):
             self.reporoot = os.path.dirname(os.path.abspath(os.environ["GIT_DIR"]))
         else:
             self.reporoot = util.popen4("git rev-parse --show-toplevel")[1].read().strip()
+
         self._revs = None
 
     def commitmessagefor(self, rev):
         return util.popen4("git cat-file commit %s | sed '1,/^$/d'" % rev)[1].read().strip()
 
+    @property
+    def head(self):
+        return util.popen4("git rev-parse HEAD")[1].read().strip()
 
     @property
     def revs(self):
@@ -41,6 +45,7 @@ class gitpostupdateinputparser(basegitinputparser):
 
     Available fields:
     - reporoot (str) => root of the repo
+    - head (str) => sha1 of HEAD
     - revs (list of sha1 (str))"""
     def parse(self):
         revs = sys.argv[1:]
@@ -53,6 +58,7 @@ class gitupdateinputparser(basegitinputparser):
 
     Available fields:
     - reporoot (str) => root of the repo
+    - head (str) => sha1 of HEAD
     - refname (str) => refname that is updated, like 'refs/heads/master'
     - old (str) => old sha of the ref
     - new (str) => new sha of the ref"""
@@ -68,7 +74,8 @@ class gitprecommitinputparser(basegitinputparser):
     """Input parser for the 'pre-commit' phase
 
     Available fields:
-    - reporoot (str) => root of the repo"""
+    - reporoot (str) => root of the repo
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         resolver = gitinforesolver()
         return resolver
@@ -77,7 +84,8 @@ class gitpreapplypatchinputparser(basegitinputparser):
     """Input parser for the 'pre-applypatch' phase
 
     Available fields:
-    - reporoot (str) => root of the repo"""
+    - reporoot (str) => root of the repo
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         resolver = gitinforesolver()
         return resolver
@@ -86,7 +94,8 @@ class gitpostapplypatchinputparser(basegitinputparser):
     """Input parser for the 'post-applypatch' phase
 
     Available fields:
-    - reporoot (str) => root of the repo"""
+    - reporoot (str) => root of the repo
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         resolver = gitinforesolver()
         return resolver
@@ -95,7 +104,8 @@ class gitpostcommitinputparser(basegitinputparser):
     """Input parser for the 'post-commit' phase
 
     Available fields:
-    - reporoot (str) => root of the repo"""
+    - reporoot (str) => root of the repo
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         resolver = gitinforesolver()
         return resolver
@@ -104,7 +114,8 @@ class gitpreautogcinputparser(basegitinputparser):
     """input parser for the 'pre-autogc' phase
 
     available fields:
-    - reporoot (str) => root of the repo"""
+    - reporoot (str) => root of the repo
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         resolver = gitinforesolver()
         return resolver
@@ -123,7 +134,8 @@ class gitpostreceiveinputparser(gitreceiveinputparser):
     available fields:
     - reporoot (str) => root of the repo
     - receivedrevs =>
-        (list of tuples: (<old-value> <new-value> <ref-name>))"""
+        (list of tuples: (<old-value> <new-value> <ref-name>))
+    - head (str) => sha1 of HEAD"""
     pass
 
 class gitprereceiveinputparser(gitreceiveinputparser):
@@ -132,7 +144,8 @@ class gitprereceiveinputparser(gitreceiveinputparser):
     available fields:
     - reporoot (str) => root of the repo
     - receivedrevs =>
-        (list of tuples: (<old-value> <new-value> <ref-name>))"""
+        (list of tuples: (<old-value> <new-value> <ref-name>))
+    - head (str) => sha1 of HEAD"""
     pass
 
 class gitprepushinputparser(basegitinputparser):
@@ -141,7 +154,8 @@ class gitprepushinputparser(basegitinputparser):
     available fields:
     - reporoot (str) => root of the repo
     - revstobepushed =>
-        (list of tuples: <local ref> <local sha1> <remote ref> <remote sha1>))"""
+        (list of tuples: <local ref> <local sha1> <remote ref> <remote sha1>))
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         resolver = gitinforesolver()
         rawrevs = hooklib_input.readlines()
@@ -154,7 +168,8 @@ class gitapplypatchmsginputparser(basegitinputparser):
 
     available fields:
     - reporoot (str) => root of the repo
-    - messagefile (str) => filename of the file containing the commit message"""
+    - messagefile (str) => filename of the file containing the commit message
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         messagefile = sys.argv[1]
         resolver = gitinforesolver()
@@ -167,7 +182,8 @@ class gitprerebaseinputparser(basegitinputparser):
     available fields:
     - reporoot (str) => root of the repo
     - upstream (str) => upstream from which the serie was forked
-    - rebase (str) => branch being rebased, None if current branch"""
+    - rebase (str) => branch being rebased, None if current branch
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         upstream = sys.argv[1]
         if len(sys.argv) > 2:
@@ -184,7 +200,8 @@ class gitcommitmsginputparser(basegitinputparser):
 
     available fields:
     - reporoot (str) => root of the repo
-    - messagefile (str) => filename of the file containing the commit message"""
+    - messagefile (str) => filename of the file containing the commit message
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         messagefile = sys.argv[1]
         resolver = gitinforesolver()
@@ -198,7 +215,8 @@ class gitpreparecommitmsginputparser(basegitinputparser):
     - reporoot (str) => root of the repo
     - messagefile (str) => filename of the file containing the commit message
     - mode (str) =>  could be one of (None, 'message', 'template', 'merge', 'squash', 'commit')
-    - sha (str) =>  could be a sha1 or None, relevant only when mode is 'commit'"""
+    - sha (str) =>  could be a sha1 or None, relevant only when mode is 'commit'
+    - head (str) => sha1 of HEAD"""
     def parse(self):
         messagefile = sys.argv[1]
         mode = None
