@@ -131,7 +131,7 @@ All the hooks!
   >         echo "class loghook(basehook):" >> $hpath
   >         echo "    def check(self, log, revdata):" >> $hpath
   >         echo "        with open('$serverpath/res','a') as k:" >> $hpath
-  >         echo "           k.write('$side: $hook\\\n')"      >> $hpath
+  >         echo "           k.write('$side: $hook %s\\\n' %sorted(vars(revdata)))"      >> $hpath
   >         echo "        return True" >> $hpath
   >         echo "runhooks('$hook', hooks=[loghook])" >> $hpath
   >         chmod +x $hpath
@@ -155,20 +155,20 @@ All the hooks!
   $ echo "op: after push" >> $serverpath/res
   $ cat $serverpath/res
   op: before first commit
-  client: pre-commit
-  client: prepare-commit-msg
-  client: commit-msg
-  client: post-commit
+  client: pre-commit ['_revs', 'reporoot']
+  client: prepare-commit-msg ['_revs', 'messagefile', 'mode', 'reporoot', 'sha']
+  client: commit-msg ['_revs', 'messagefile', 'reporoot']
+  client: post-commit ['_revs', 'reporoot']
   op: after first commit
   op: before second commit
-  client: pre-commit
-  client: prepare-commit-msg
+  client: pre-commit ['_revs', 'reporoot']
+  client: prepare-commit-msg ['_revs', 'messagefile', 'mode', 'reporoot', 'sha']
   op: after second commit
   op: before push
-  client: pre-push
-  server: pre-receive
-  server: update
-  server: post-receive
-  server: post-update
+  client: pre-push ['_revs', 'reporoot', 'revstobepushed']
+  server: pre-receive ['_revs', 'receivedrevs', 'reporoot']
+  server: update ['_revs', 'new', 'old', 'refname', 'reporoot']
+  server: post-receive ['_revs', 'receivedrevs', 'reporoot']
+  server: post-update ['_revs', 'reporoot']
   op: after push
 
