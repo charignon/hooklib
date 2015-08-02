@@ -12,10 +12,13 @@ class gitinforesolver(object):
         self.reporoot = None
         if 'GIT_DIR' in os.environ:
             self.reporoot = os.path.dirname(os.path.abspath(os.environ["GIT_DIR"]))
+        else:
+            self.reporoot = util.popen4("git rev-parse --show-toplevel")[1].read().strip()
         self._revs = None
 
     def commitmessagefor(self, rev):
         return util.popen4("git cat-file commit %s | sed '1,/^$/d'" % rev)[1].read().strip()
+
 
     @property
     def revs(self):
