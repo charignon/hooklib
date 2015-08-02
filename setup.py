@@ -13,6 +13,7 @@ setup(
     author_email="l.charignon@gmail.com",
     description="Hook helper library in python",
     keywords="hooks",
+    license='Apache 2.0',
     py_modules=['hooklib', 'hooklib_git', 'hooklib_input', 'hooklib_hg'],
     **extra
 )
