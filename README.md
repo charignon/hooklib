@@ -93,6 +93,30 @@ Save the following file under .git/hooks/post-update and make it executable to t
   runhooks('post-update', hooks=[slowhook]*200+[veryslowhook], parallel=True)
   ```
 
+Example 4: client side commit message styling check
+-
+The following hooks checks on the client side that the commit message follows the format: "topic: explanation"
+I have it enabled for this repo to make sure that I respect the format I intended to keep.
+Save the following file under .git/hooks/commit-msg and make it executable to test it:
+  ```python
+  #!/usr/bin/python 
+  from hooklib import basehook, runhooks 
+  import re
+  
+  class validatecommitmsg(basehook): 
+       def check(self, log, revdata): 
+  	with open(revdata.messagefile) as f:
+  	    msg = f.read()
+  	if re.match("[a-z]+: .*", msg):
+  	    return True
+  	else:
+  	    log.write("validatecommit msg rejected your commit message")
+  	    log.write("(message must follow format: 'topic: explanation')")
+  	    return False
+  
+  runhooks('commit-msg', hooks=[validatecommitmsg])  
+  ```
+
 Installation
 -
 ```
