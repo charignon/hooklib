@@ -156,7 +156,10 @@ class testscmresolution(unittest.TestCase):
     def test_gitpreapplypatch(self):
         revdata = inputparser.fromphase('pre-applypatch').parse()
         assert(isinstance(revdata, gitinforesolver))
-
+    
+    def test_gitpostapplypatch(self):
+        revdata = inputparser.fromphase('pre-applypatch').parse()
+        assert(isinstance(revdata, gitinforesolver))
 
 if __name__ == '__main__':
     unittest.main()
