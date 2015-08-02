@@ -146,6 +146,13 @@ Save the following file under .git/hooks/pre-commit and make it executable to te
 
 Installation
 -
+You can use pip:
+```
+sudo pip install mercurial
+sudo pip install hooklib
+```
+
+Or install it directly from the repo:
 ```
 git clone https://github.com/charignon/hooklib.git
 sudo python setup.py install
