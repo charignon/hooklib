@@ -60,6 +60,11 @@ class gitpostapplypatchinputparser(basegitinputparser):
         resolver = gitinforesolver()
         return resolver
 
+class gitpostcommitinputparser(basegitinputparser):
+    def parse(self):
+        resolver = gitinforesolver()
+        return resolver
+
 class gitapplypatchmsginputparser(basegitinputparser):
     def parse(self):
         messagefile = sys.argv[1]

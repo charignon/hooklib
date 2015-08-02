@@ -224,7 +224,9 @@ class testscmresolution(unittest.TestCase):
         revdata = inputparser.fromphase('commit-msg').parse()
         assert(revdata.messagefile == 'messagefile')
 
-
+    def test_gitpostcommit(self):
+        parser = inputparser.fromphase('post-commit')
+        assert(isinstance(parser, gitpostcommitinputparser))
 
 if __name__ == '__main__':
     unittest.main()

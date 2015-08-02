@@ -5,6 +5,7 @@ from hooklib_git import gitpreapplypatchinputparser
 from hooklib_git import gitapplypatchmsginputparser
 from hooklib_git import gitpostapplypatchinputparser
 from hooklib_git import gitcommitmsginputparser
+from hooklib_git import gitpostcommitinputparser
 from hooklib_git import gitpreparecommitmsginputparser
 from hooklib_hg import hgupdateinputparser
 import os
@@ -13,6 +14,11 @@ class preparecommitmsginputparser(object):
     @staticmethod
     def findscm():
         return gitpreparecommitmsginputparser()
+
+class postcommitinputparser(object):
+    @staticmethod
+    def findscm():
+        return gitpostcommitinputparser()
 
 class preapplypatchinputparser(object):
     @staticmethod
@@ -98,6 +104,7 @@ class inputparser(object):
             'pre-commit': precommitinputparser,
             'prepare-commit-msg': preparecommitmsginputparser,
             'commit-msg': commitmsginputparser,
+            'post-commit': postcommitinputparser,
             'update': updateinputparser,
             'post-update': postupdateinputparser,
         }

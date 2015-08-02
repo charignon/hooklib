@@ -15,6 +15,7 @@ post-applypatch  | Git
 pre-commit  | Git
 prepare-commit-msg  | Git
 commit-msg  | Git
+post-commit  | Git
 update  | Git, Hg
 post-update  | Git
 
