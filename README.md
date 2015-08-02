@@ -23,6 +23,7 @@ update  | Git, Hg | reporoot(git), head(git), refname(git) old(git), new(git), r
 post-receive  | Git | reporoot, head, receivedrevs
 post-update  | Git | reporoot, head, revs
 pre-auto-gc  | Git | reporoot, head
+
 Currently only supports git and hg
 
 
