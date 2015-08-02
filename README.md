@@ -8,7 +8,7 @@ Python hook helper library:
 Supported hooks phases:
 
 Phase name  | SCM | Available fields
-------------- | -------------
+------------- | ------------- | ----------------
 applypatch-msg  | Git | reporoot, head, messagefile
 pre-applypatch  | Git | reporoot, head
 post-applypatch  | Git | reporoot, head
