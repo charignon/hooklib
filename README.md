@@ -61,7 +61,7 @@ Save the following file under .git/hooks/update and make it executable to test i
   
  class mastergatinghook(basehook):
     def check(self, log, revdata):
-       pushtomaster = revdata['name'] == 'refs/heads/master'
+       pushtomaster = revdata.refname == 'refs/heads/master'
        if not pushtomaster:           
           log.write("you can only push master on this repo")
           return False
