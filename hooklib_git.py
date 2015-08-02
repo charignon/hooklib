@@ -1,3 +1,6 @@
+"""Package containing all the input parsers specific to git
+Their implementation match what is described at https://git-scm.com/docs/githooks"""
+
 from mercurial import util
 import hooklib_input
 import sys
