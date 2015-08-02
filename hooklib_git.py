@@ -85,6 +85,14 @@ class gitpostreceiveinputparser(gitreceiveinputparser):
 class gitprereceiveinputparser(gitreceiveinputparser):
     pass
 
+class gitprepushinputparser(basegitinputparser):
+    def parse(self):
+        resolver = gitinforesolver()
+        rawrevs = hooklib_input.readlines()
+        revs = tuple([tuple(line.strip().split(' ')) for line in rawrevs])
+        resolver.revstobepushed = revs
+        return resolver
+
 class gitapplypatchmsginputparser(basegitinputparser):
     def parse(self):
         messagefile = sys.argv[1]

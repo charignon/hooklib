@@ -6,6 +6,7 @@ from hooklib_git import gitapplypatchmsginputparser
 from hooklib_git import gitpostapplypatchinputparser
 from hooklib_git import gitcommitmsginputparser
 from hooklib_git import gitpostcommitinputparser
+from hooklib_git import gitprepushinputparser
 from hooklib_git import gitprerebaseinputparser
 from hooklib_git import gitpreautogcinputparser
 from hooklib_git import gitprereceiveinputparser
@@ -18,6 +19,12 @@ import sys
 def readlines():
     """Extracted to make mocking it easier"""
     return sys.stdin.readlines()
+
+class prepushinputparser(object):
+    @staticmethod
+    def findscm():
+        return gitprepushinputparser()
+
 
 class prereceiveinputparser(object):
     @staticmethod
@@ -135,6 +142,7 @@ class inputparser(object):
             'commit-msg': commitmsginputparser,
             'post-commit': postcommitinputparser,
             'pre-rebase': prerebaseinputparser,
+            'pre-push': prepushinputparser,
             'pre-receive': prereceiveinputparser,
             'update': updateinputparser,
             'post-receive': postreceiveinputparser,

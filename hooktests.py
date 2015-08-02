@@ -266,7 +266,16 @@ class testscmresolution(unittest.TestCase):
         revdata = inputparser.fromphase('post-receive').parse()
         assert(revdata.receivedrevs == revs)
 
-    # TODO post-checkout, post-merge, pre-push, push-to-checkout, post-rewrite
+    def test_gitprepush(self):
+        revs = (('refs/heads/master', 'a'*40, 'refs/heads/foreign', 'b'*40),
+                ('refs/heads/master', 'a'*40, 'refs/heads/foreign', '0'*40))
+        dummyinput = ["%s %s %s %s\n" %(a, b, c, d) for (a, b, c, d) in revs]
+        hooklib_input.readlines = MagicMock(return_value=dummyinput)
+        revdata = inputparser.fromphase('pre-push').parse()
+        assert(revdata.revstobepushed == revs)
+
+
+    # TODO post-checkout, post-merge,  push-to-checkout, post-rewrite
     # TODO add documentation for what is available for each kind of hooks
     # see https://git-scm.com/docs/githooks
 
