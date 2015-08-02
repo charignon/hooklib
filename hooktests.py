@@ -3,6 +3,7 @@ import time
 from hooklib import hookrunner, basehook, parallelhookrunner
 from hooklib_input import inputparser
 from hooklib_git import *
+from hooklib_hg import *
 import os
 import sys
 
@@ -162,6 +163,25 @@ class testscmresolution(unittest.TestCase):
         parser = inputparser.fromphase('post-applypatch')
         assert(isinstance(parser, gitpostapplypatchinputparser))
         assert(isinstance(parser.parse(), gitinforesolver))
+
+    def test_cascade_hook_type(self):
+        """If you write a hook for hg and git and they don't
+        have the same hook phase available, you can specify what
+        phase you want for each SCM
+
+        The following hook will run at the update phase for
+        hg repos and post-applypatch for git repos
+        A hg repo. If both are available the order of the tuple
+        is honored.
+        """
+        os.environ["HG_NODE"] = "a"*40
+        parser = inputparser.fromphases((('hg','update'), 
+                                         ('git','post-applypatch')))
+        assert(isinstance(parser, hgupdateinputparser))
+        del os.environ["HG_NODE"]
+        parser = inputparser.fromphases((('hg','update'), 
+                                         ('git','post-applypatch')))
+        assert(isinstance(parser, gitpostapplypatchinputparser))
 
 if __name__ == '__main__':
     unittest.main()

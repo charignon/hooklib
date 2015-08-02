@@ -2,6 +2,10 @@ from mercurial import util
 import sys
 import os
 
+class basegitinputparser(object):
+    def scm(self):
+        return 'git'
+
 class gitinforesolver(object):
     def __init__(self):
         self.reporoot = None
@@ -25,14 +29,14 @@ class gitinforesolver(object):
     def setrevs(self, revs):
         self._revs = revs
 
-class gitpostupdateinputparser(object):
+class gitpostupdateinputparser(basegitinputparser):
     def parse(self):
         revs = sys.argv[1:]
         resolver = gitinforesolver()
         resolver.setrevs(revs)
         return resolver
 
-class gitupdateinputparser(object):
+class gitupdateinputparser(basegitinputparser):
     def parse(self):
         refname, old, new = sys.argv[1:]
         resolver = gitinforesolver()
@@ -41,22 +45,22 @@ class gitupdateinputparser(object):
         resolver.new = new
         return resolver
 
-class gitprecommitinputparser(object):
+class gitprecommitinputparser(basegitinputparser):
     def parse(self):
         resolver = gitinforesolver()
         return resolver
 
-class gitpreapplypatchinputparser(object):
+class gitpreapplypatchinputparser(basegitinputparser):
     def parse(self):
         resolver = gitinforesolver()
         return resolver
 
-class gitpostapplypatchinputparser(object):
+class gitpostapplypatchinputparser(basegitinputparser):
     def parse(self):
         resolver = gitinforesolver()
         return resolver
 
-class gitapplypatchmsginputparser(object):
+class gitapplypatchmsginputparser(basegitinputparser):
     def parse(self):
         messagefile = sys.argv[1]
         resolver = gitinforesolver()

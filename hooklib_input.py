@@ -58,6 +58,22 @@ class dummyinputparser(object):
 
 class inputparser(object):
     @staticmethod
+    def fromphases(p):
+        parser = None
+        for scm, phasename in p:
+            try:
+                parser = inputparser.fromphase(phasename)
+                if parser.scm() == scm:
+                    return parser
+                else:
+                    continue
+            except NotImplementedError:
+                pass
+        if parser is None:
+            raise NotImplementedError("Couldn't find phase matching"
+                                      " conditions")
+
+    @staticmethod
     def fromphase(phase):
         """Factory method to return an appropriate input parser
         For example if the phase is 'post-update' and that the git env
