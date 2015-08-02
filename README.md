@@ -93,7 +93,7 @@ Save the following file under .git/hooks/post-update and make it executable to t
   runhooks('post-update', hooks=[slowhook]*200+[veryslowhook], parallel=True)
   ```
 
-Example 4: client side commit message styling check
+Example 4: client side commit message style check
 -
 The following hooks checks on the client side that the commit message follows the format: "topic: explanation"
 I have it enabled for this repo to make sure that I respect the format I intended to keep.
