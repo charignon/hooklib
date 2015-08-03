@@ -1,9 +1,9 @@
-# hooklib: easy source control hooks in Python
+# Hooklib: Easy Source Control Hooks
 
-Python hook helper library:
-- SCM Agnostic: Can work with different SCM (git, svn, hg), write your hook once and they work on other SCMs
-- Simple API: Don't learn the secret commands to peek inside your source control system, all you need is accessible and computed on the fly
-- Parallel/Sequential mode: Run your hooks in parallel or sequentially
+Hooklib is an Apache2 Licensed library, in Python, to help people write hooks for source control:
+- **SCM Agnostic:** hooks can work with different SCM (git, svn, hg), write your hook once and they work on other SCMs
+- **Simple API:** don't learn the secret commands to peek inside your source control system, all you need is accessible and computed on the fly
+- **Parallel/Sequential execution:** run your hooks in parallel or sequentially
 
 Supported hooks phases:
 
