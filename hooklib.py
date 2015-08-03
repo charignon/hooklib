@@ -1,15 +1,16 @@
-"""Hook helpers library 
+"""Hook helpers library
 
-You can use this library to make it easier to write hooks that work with multiple
-source control system (git, svn, hg ...).
+You can use this library to make it easier to write hooks
+that work with multiple source control system (git, svn, hg ...).
 It currently only works for git.
 See https://github.com/charignon/hooklib for examples"""
 import threading
 import sys
 from Queue import Queue
-from hooklib_input import inputparser 
+from hooklib_input import inputparser
 
-def runhooks(phase, hooks, parallel = False):
+
+def runhooks(phase, hooks, parallel=False):
     if parallel:
         runner = parallelhookrunner(phase)
     else:
@@ -22,6 +23,7 @@ def runhooks(phase, hooks, parallel = False):
         sys.stderr.write("\n".join(log)+"\n")
     if not ret:
         sys.exit(1)
+
 
 class hooklog(object):
     """Collect logs from running hooks"""
@@ -42,6 +44,7 @@ class hooklog(object):
         ret = hooklog()
         ret.msgs = msgs
         return ret
+
 
 class hookrunner(object):
     def __init__(self, phase=None, phases=None):
@@ -65,8 +68,9 @@ class hookrunner(object):
 
             if not hookpass:
                 success = False
-        
+
         return success
+
 
 class parallelhookrunner(hookrunner):
     def evaluateone(self, hook):
@@ -84,7 +88,7 @@ class parallelhookrunner(hookrunner):
         for t in threads:
             t.join()
         res, logs = [], []
-        
+
         for h in range(len(self.runlist)):
             r, l = self.resultqueue.get()
             res.append(r)
@@ -93,7 +97,7 @@ class parallelhookrunner(hookrunner):
         self.log = hooklog.aggregate(logs)
         return all(res)
 
- 
+
 class basehook(object):
-    """A basehook is called for each rev that goes through, once with the revdata"""
+    """A basehook to be subclassed by user implemented hooks"""
     pass

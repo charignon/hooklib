@@ -9,21 +9,27 @@ from hooklib_hg import *
 import os
 import sys
 
+
+ERROR_MSG = "ERROR ABC"
+ERROR_MSG2 = "ERROR XYZ"
+
+
 class passinghook(basehook):
     def check(self, log, revdata):
         return True
 
-ERROR_MSG = "ERROR ABC"
+
 class failinghook(basehook):
     def check(self, log, revdata):
         log.write(ERROR_MSG)
         return False
 
-ERROR_MSG2 = "ERROR XYZ"
+
 class failinghook2(basehook):
     def check(self, log, revdata):
         log.write(ERROR_MSG2)
         return False
+
 
 class slowfailinghook(basehook):
     def check(self, log, revdata):
@@ -31,8 +37,8 @@ class slowfailinghook(basehook):
         log.write(ERROR_MSG)
         return False
 
-class testhookrunner(unittest.TestCase):
 
+class testhookrunner(unittest.TestCase):
     def test_passing_hook(self):
         """Passing hook works"""
         runner = hookrunner()
@@ -69,8 +75,8 @@ class testhookrunner(unittest.TestCase):
         assert(runner.evaluate()) == False
         assert(runner.log.read()) == [ERROR_MSG, ERROR_MSG2]
 
-class testparallelhookrunner(unittest.TestCase):
 
+class testparallelhookrunner(unittest.TestCase):
     def test_speed(self):
         """parallel hook runner should run hooks really in parallel"""
         runner = parallelhookrunner()
@@ -79,7 +85,8 @@ class testparallelhookrunner(unittest.TestCase):
         t1 = time.time()
         assert(runner.evaluate()) == False
         t2 = time.time()
-        # 100 * 0.1 = 10s if the run was not parallel, here we expect less than 0.5s
+        # 100 * 0.1 = 10s if the run was not parallel
+        # here we expect less than 0.5s
         assert (t2-t1) < 0.5
 
     def test_aggregation(self):
@@ -93,7 +100,8 @@ class testparallelhookrunner(unittest.TestCase):
         assert ERROR_MSG2 in runner.log.read()
 
     def test_correctness(self):
-        """parallel hook runner with failing and passing hook should return failure"""
+        """parallel hook runner with failing + passing hook
+        should return failure"""
         runner = parallelhookrunner()
         for i in range(3):
             runner.register(slowfailinghook)
@@ -101,9 +109,10 @@ class testparallelhookrunner(unittest.TestCase):
             runner.register(passinghook)
         assert(runner.evaluate() == False)
 
+
 class testscmresolution(unittest.TestCase):
     """Checking that we get the right SCM parser for different hook type"""
-    
+
     def setUp(self):
         self.origargv = list(sys.argv)
         self.origenv = os.environ.copy()
@@ -111,13 +120,13 @@ class testscmresolution(unittest.TestCase):
     def tearDown(self):
         os.environ = self.origenv
         sys.argv = self.origargv
-    
+
     def test_git_postupdate(self):
         os.environ["GIT_DIR"] = "."
         sys.argv = ["program.name", "a"*40]
         revdata = inputparser.fromphase('post-update').parse()
         assert(revdata.revs == ["a"*40])
-    
+
     def test_hg_postupdate(self):
         os.environ["HG_NODE"] = "."
         with self.assertRaises(NotImplementedError):
@@ -130,12 +139,12 @@ class testscmresolution(unittest.TestCase):
         assert(revdata.refname == "a"*40)
         assert(revdata.old == "0"*40)
         assert(revdata.new == "1"*40)
-    
+
     def test_hg_update(self):
         os.environ["HG_NODE"] = "a"*40
         revdata = inputparser.fromphase('update').parse()
         assert(revdata.revs == ["a"*40])
-    
+
     def test_git_precommit(self):
         os.environ["GIT_DIR"] = "."
         sys.argv = ["program.name"]
@@ -146,7 +155,7 @@ class testscmresolution(unittest.TestCase):
         os.environ["HG_NODE"] = "."
         with self.assertRaises(NotImplementedError):
             revdata = inputparser.fromphase('pre-commit')
-    
+
     def test_unknown_hookname(self):
         with self.assertRaises(NotImplementedError):
             revdata = inputparser.fromphase('unknown-phase')
@@ -160,7 +169,7 @@ class testscmresolution(unittest.TestCase):
         parser = inputparser.fromphase('pre-applypatch')
         assert(isinstance(parser, gitpreapplypatchinputparser))
         assert(isinstance(parser.parse(), gitinforesolver))
-    
+
     def test_gitpostapplypatch(self):
         parser = inputparser.fromphase('post-applypatch')
         assert(isinstance(parser, gitpostapplypatchinputparser))
@@ -177,19 +186,19 @@ class testscmresolution(unittest.TestCase):
         is honored.
         """
         os.environ["HG_NODE"] = "a"*40
-        parser = inputparser.fromphases((('hg','update'), 
-                                         ('git','post-applypatch')))
+        parser = inputparser.fromphases((('hg', 'update'),
+                                         ('git', 'post-applypatch')))
         assert(isinstance(parser, hgupdateinputparser))
         del os.environ["HG_NODE"]
-        parser = inputparser.fromphases((('hg','update'), 
-                                         ('git','post-applypatch')))
+        parser = inputparser.fromphases((('hg', 'update'),
+                                         ('git', 'post-applypatch')))
         assert(isinstance(parser, gitpostapplypatchinputparser))
 
     def test_cascade_hook_notfound(self):
         os.environ["HG_NODE"] = "a"*40
         with self.assertRaises(NotImplementedError):
-            parser = inputparser.fromphases((('hg','post-applypatch'), 
-                                             ('git','blah')))
+            parser = inputparser.fromphases((('hg', 'post-applypatch'),
+                                             ('git', 'blah')))
 
     def test_gitpreparecommitmsg(self):
         # possible options
@@ -208,7 +217,7 @@ class testscmresolution(unittest.TestCase):
                     (True, 'commitlogmsg', 'commit', 'a'*40),
                     (False, 'commitlogmsg', 'illegal'),
                 )
-        
+
         for case in cases:
             valid = case[0]
             args = case[1:]
@@ -216,7 +225,7 @@ class testscmresolution(unittest.TestCase):
             parser = inputparser.fromphase('prepare-commit-msg')
             assert(isinstance(parser, gitpreparecommitmsginputparser))
             if valid:
-                parser.parse() # not exception
+                parser.parse()  # not exception
             else:
                 with self.assertRaises(ValueError):
                     parser.parse()
@@ -237,14 +246,14 @@ class testscmresolution(unittest.TestCase):
         revdata = parser.parse()
         assert(revdata.upstream == 'upstream')
         assert(revdata.rebased == 'rebased')
- 
+
     def test_gitprerebasecurrentbranch(self):
         sys.argv = ['program.name', 'upstream']
         parser = inputparser.fromphase('pre-rebase')
         assert(isinstance(parser, gitprerebaseinputparser))
         revdata = parser.parse()
         assert(revdata.upstream == 'upstream')
-        assert(revdata.rebased == None)
+        assert(revdata.rebased is None)
 
     def test_gitpreautogc(self):
         parser = inputparser.fromphase('pre-auto-gc')
